@@ -79,7 +79,8 @@ async def whatsapp(message):
 
             async with async_playwright() as p:
                 browser = await p.chromium.launch(headless=False)
-                page = await browser.new_page()
+                context = await browser.new_context(user_agent='Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.1985.67 Safari/537.36')
+                page = await context.new_page()
                 await page.goto('https://web.whatsapp.com/')
                 scan = False
                 while not scan:
@@ -113,7 +114,7 @@ async def whatsapp(message):
                     #outra mensagem para o bot aqui
                     print(f'enviando para {i}')
                     await bot.send_message(message.chat.id, f'Mensagem enviada para {i}')
-                    
+
     else:
         await bot.send_message(message.chat.id, 'Vocë não tem permissão para usar esse comando')
 
