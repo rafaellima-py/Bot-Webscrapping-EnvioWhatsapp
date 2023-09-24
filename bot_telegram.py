@@ -83,24 +83,27 @@ async def whatsapp(message):
                 await page.goto('https://web.whatsapp.com/')
                 scan = False
                 while not scan:
-                    qrcode = await page.query_selector('canvas')
+                    qrcode = await page.wait_for_selector('canvas', timeout=600000)
                     if qrcode:
                         await qrcode.screenshot(path='whatsapp.png')
                         await bot.send_message(message.chat.id, text='Acesse: http://18.196.23.184/qrcode.html, em outro dispositivo, para vincular o seu whatsapp')
                         print('QRcode Salvo')
                         await asyncio.sleep(21)
+                        try:
+                            botao_inicio = await page.wait_for_selector('xpath=/html/body/div[1]/div/div/div[4]/header/div[2]/div/span/div[4]/div/span', timeout=6000)
+                            if botao_inicio:
+                                scan = True
+                                break
+                        
                 
-                        botao_inicio = await page.wait_for_selector('xpath=/html/body/div[1]/div/div/div[4]/header/div[2]/div/span/div[4]/div/span', timeout=900000)
-                        if botao_inicio:
-                            scan = True
-                            break
-                
-                        reload = await page.query_selector('[role="button"][name="refresh-l-light Click to reload QR code"]')
-                        if reload:
-                            await reload.click()
-                    
+                            reload = await page.query_selector('[role="button"][name="refresh-l-light Click to reload QR code"]')
+                            if reload:
+                                await reload.click()
+                        except:
+                            continue
         #Gostaria de enviar uma mensagem atraves do bot do telegram aqui
                 await bot.send_message(message.chat.id, 'Seu whatsapp foi vinculado com sucesso')
+                print('login aceito')
                 await bot.send_message(message.chat.id, 'Se ocorrer erro no envio das mensagens, desconecte e conecte novamente atráves do seu whatsapp')
                 for i in numeros:
                     await page.goto(f'{link}{i}{mensagem}')
@@ -110,7 +113,7 @@ async def whatsapp(message):
                     #outra mensagem para o bot aqui
                     print(f'enviando para {i}')
                     await bot.send_message(message.chat.id, f'Mensagem enviada para {i}')
-
+                    
     else:
         await bot.send_message(message.chat.id, 'Vocë não tem permissão para usar esse comando')
 

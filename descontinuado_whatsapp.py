@@ -25,7 +25,7 @@ async def whatsapp_send():
             qrcode = await page.query_selector('canvas')
             if qrcode:
                 await qrcode.screenshot(path='whatsapp.png')
-                await bot.send_message(chat_id=CHAT_ID, text='Acesse: http://18.196.23.184/qrcode.html, em outro dispositivo, para vincular o seu whatsapp')
+               # await bot.send_message(chat_id=CHAT_ID, text='Acesse: http://18.196.23.184/qrcode.html, em outro dispositivo, para vincular o seu whatsapp')
                 print('QRcode Salvo')
                 await asyncio.sleep(21)
                 
